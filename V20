@@ -1,0 +1,41 @@
+//@version=5
+indicator("V20", overlay=true)
+
+// Input for percentage threshold
+movementThreshold = input.float(20.0, title="Movement Threshold (%)")
+
+// Condition for a green candle (bullish candle)
+isGreenCandle = close > open
+
+// Variables to track the lowest low and highest high of continuous green candles
+var float lowestPrice = na
+var float highestPrice = na
+
+// Reset variables when a red candle is detected
+if not isGreenCandle
+    lowestPrice := na
+    highestPrice := na
+
+// Track the lowest low and highest high during a streak of green candles
+if isGreenCandle
+    lowestPrice := na(lowestPrice) ? low : math.min(lowestPrice, low)
+    highestPrice := na(highestPrice) ? high : math.max(highestPrice, high)
+
+// Calculate the percentage movement from the lowest price to the highest price
+movementPercent = ((highestPrice - lowestPrice) / lowestPrice) * 100
+
+// Condition to check if the movement is greater than or equal to the threshold
+validMovement = movementPercent >= movementThreshold
+
+// Use bgcolor to apply transparency (85% transparency)
+bgColor = color.new(color.green, 85)
+
+// Highlight the candles if there are continuous green candles with movement >= 20%
+bgcolor(isGreenCandle and validMovement ? bgColor : na)
+
+// Use plotshape to mark the valid candles
+plotshape(isGreenCandle and validMovement, title="20% Movement", location=location.abovebar, color=color.green, style=shape.triangledown)
+
+// Use label.new() to display dynamic text (percentage movement) above the triangle
+if isGreenCandle and validMovement
+    label.new(bar_index, high + (high * 0.02), text=str.tostring(movementPercent, "#.##") + "%", style=label.style_label_down, color=color.black, textcolor=color.white, size=size.normal)
