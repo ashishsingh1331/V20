@@ -1,0 +1,68 @@
+//@version=5
+indicator("V20 with Prices", overlay=true)
+
+// Input for percentage threshold
+movementThreshold = input.float(20.0, title="Movement Threshold (%)")
+
+// Inputs to toggle visibility of lowest and highest prices
+showLowestPrice = input.bool(true, title="Show Lowest Price")
+showHighestPrice = input.bool(true, title="Show Highest Price")
+
+// Condition for a green candle (bullish candle)
+isGreenCandle = close > open
+
+// Variables to track the lowest low, highest high, and other flags
+var float lowestPrice = na
+var float highestPrice = na
+var int lowestPriceIndex = na  // Store the index of the lowestPrice candle
+var int highestPriceIndex = na  // Store the index of the highestPrice candle
+var float lastMovementPercent = na  // Store the movement percentage of the last green candle
+var line lowestLine = na  // Store the line object for lowestPrice
+var line highestLine = na  // Store the line object for highestPrice
+var label lowestPriceLabel = na  // Store the label for the lowestPrice
+var label highestPriceLabel = na  // Store the label for the highestPrice
+
+// Reset variables when a red candle is detected (i.e., not a green candle)
+if not isGreenCandle
+    if na(highestPriceIndex) == false and na(lowestPriceIndex) == false and lastMovementPercent >= movementThreshold
+        // Display the label with percentage movement above the last green candle
+        label.new(highestPriceIndex, high[1] + (high[1] * 0.02), text=str.tostring(lastMovementPercent, "#.##") + "%", style=label.style_label_down, color=color.black, textcolor=color.white, size=size.normal)
+
+        // Add price text using labels on the lines based on user input
+        if showHighestPrice
+            highestPriceLabel := label.new(x=highestPriceIndex, y=highestPrice, text="Next Sell at: " + str.tostring(highestPrice, "#.##"), style=label.style_label_left, color=color.red, textcolor=color.white, size=size.normal)
+        if showLowestPrice
+            lowestPriceLabel := label.new(x=lowestPriceIndex, y=lowestPrice, text="Next Buy at: " + str.tostring(lowestPrice, "#.##"), style=label.style_label_left, color=color.blue, textcolor=color.white, size=size.normal)
+
+    // Reset for the next sequence
+    lowestPrice := na
+    highestPrice := na
+    lowestPriceIndex := na  // Reset the lowest price index
+    highestPriceIndex := na  // Reset the highest price index
+    lastMovementPercent := na   // Reset the last movement percentage
+
+// Track the lowest low and highest high during a streak of green candles
+if isGreenCandle
+    lowestPrice := na(lowestPrice) ? low : math.min(lowestPrice, low)
+    highestPrice := na(highestPrice) ? high : math.max(highestPrice, high)
+
+    // Store the index of the lowest and highest price candles
+    lowestPriceIndex := na(lowestPrice) ? bar_index : (low == lowestPrice ? bar_index : lowestPriceIndex)
+    highestPriceIndex := na(highestPrice) ? bar_index : (high == highestPrice ? bar_index : highestPriceIndex)
+
+// Calculate the percentage movement from the lowest price to the highest price
+if na(lowestPrice) == false and na(highestPrice) == false
+    movementPercent = ((highestPrice - lowestPrice) / lowestPrice) * 100
+    lastMovementPercent := movementPercent
+
+// Condition to check if the movement is greater than or equal to the threshold
+validMovement = lastMovementPercent >= movementThreshold
+
+// Use bgcolor to apply transparency (85% transparency)
+bgColor = color.new(color.green, 85)
+
+// Highlight the candles if there are continuous green candles with movement >= 20%
+bgcolor(isGreenCandle and validMovement ? bgColor : na)
+
+// Use plotshape to mark the valid candles
+plotshape(isGreenCandle and validMovement, title="20% Movement", location=location.abovebar, color=color.green, style=shape.triangledown)
