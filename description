@@ -1,0 +1,36 @@
+[b]V20 with Prices[/b]
+The V20 with Prices strategy is a unique tool designed to assist traders in identifying potential buy and sell levels by analyzing continuous bullish price movements (green candles). This strategy tracks streaks of green candles and calculates key price levels based on the highest and lowest points during the streak. It highlights potential reversal points, giving traders insights into where they could consider buying or selling based on price movement thresholds.
+
+[b]Key Features:[/b]
+Tracking Green Candle Streaks: The V20 with Prices strategy identifies sequences of continuous green candles and captures the lowest price and highest price within the streak, helping traders identify potential turning points in an uptrend.
+
+[b]Next Buy and Sell Levels:[/b] After a streak of green candles ends, the strategy highlights:
+[b]Next Buy at:[/b] The lowest price of the streak, indicating a potential re-entry point if the price revisits this level.
+[b]Next Sell at: [/b]The highest price of the streak, indicating a potential profit-taking point if the price reaches this level again.
+Both of these price levels are displayed on the chart, and traders can choose whether to show these levels via customizable input settings.
+
+[b]Movement Percentage Highlight: [/b]The strategy calculates the percentage movement between the lowest and highest prices in the streak. If the movement exceeds the user-defined threshold (default is 20%), it highlights these candles with a green background, allowing traders to quickly identify significant price movements.
+
+[b]Customizable Price Display:[/b] Users can toggle the display of the Next Buy at and Next Sell at price levels through input settings, providing full control over what is shown on the chart.
+
+[b]How It Works:[/b]
+Green Candle Tracking: The strategy identifies a streak of green candles where the close price is higher than the open price. During this streak, the lowest low and highest high are tracked.
+
+[b]Price Movement Threshold:[/b] If the movement between the lowest low and highest high exceeds the user-defined threshold, the candles are highlighted with a green background.
+
+[b]Key Levels:[/b] After a streak of green candles ends (when a red candle appears), the Next Buy at and Next Sell at levels are stored and displayed, giving traders clear reference points for future price action.
+
+[b]How to Use:[/b]
+[b]Movement Threshold:[/b] Customize the movement threshold to filter significant price moves. A higher threshold reduces sensitivity to small movements, while a lower threshold increases sensitivity.
+
+[b]Customizable Price Display:[/b] Toggle the display of key price levels to match your trading style.
+
+[b]Ideal Use Cases:[/b]
+[b]Trend-following:[/b] The strategy is perfect for traders looking to identify potential re-entry points during an uptrend or take-profit points as the price reaches new highs.
+Retracement Trading: Traders can monitor the Next Buy at level to capitalize on price retracements after strong upward movements.
+Important Notes:
+[b]Disclaimer: [/b]This strategy is for informational purposes only and is not intended as financial advice or a buy/sell recommendation. Traders should always perform their own analysis before making any trading decisions.
+
+[b]Non-Repainting: [/b]This strategy does not repaint, ensuring that all displayed levels are based on actual price action.
+
+[b]Open Source:[/b] The logic and source code are transparent, allowing traders to modify the strategy if needed.
