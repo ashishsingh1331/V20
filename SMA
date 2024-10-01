@@ -1,0 +1,69 @@
+//@version=5
+indicator("SMA", overlay=true)
+
+// Moving averages
+sma200 = ta.sma(close, 200)
+sma50 = ta.sma(close, 50)
+sma20 = ta.sma(close, 20)
+
+// Plot the moving averages with line width of 1
+plot(sma200, color=color.black, linewidth=1, title="200-day SMA")
+plot(sma50, color=color.red, linewidth=1, title="50-day SMA")
+plot(sma20, color=color.green, linewidth=1, title="20-day SMA")
+
+// Corrected Buy Signal: Price < 200 SMA, 50 SMA, and 20 SMA and 200 SMA > 50 SMA > 20 SMA
+buySignal = (close < sma200) and (close < sma50) and (close < sma20) and (sma200 > sma50 and sma50 > sma20)
+
+// Corrected Sell Signal: Price > 200 SMA, 50 SMA, and 20 SMA AND 200 SMA < 50 SMA < 20 SMA
+sellSignal = (close > sma200) and (close > sma50) and (close > sma20) and (sma200 < sma50 and sma50 < sma20)
+
+// Variables to store buy data
+var float buyPrice = na
+var int buyBarIndex = na
+var int buyTime = na  // Store buy signal timestamp
+var bool hasBought = false
+var bool hasSold = false
+
+// Initialize flags for plotting
+var bool plotBuy = false
+var bool plotSell = false
+
+// Logic to trigger a buy signal once at the crossover point
+if buySignal and not hasBought
+    plotBuy := true
+    hasBought := true
+    hasSold := false  // Reset sell state when a buy occurs
+    buyPrice := close  // Store the buy price
+    buyBarIndex := bar_index  // Store the bar index when the buy happened
+    buyTime := time  // Store the buy signal timestamp
+else
+    plotBuy := false
+
+// Logic to trigger a sell signal once at the crossover point
+if sellSignal and not hasSold and hasBought
+    plotSell := true
+    hasSold := true
+    hasBought := false  // Reset buy state when a sell occurs
+    
+    // Calculate the percentage gain/loss and number of calendar days between buy and sell
+    sellPrice = close
+    percentChange = ((sellPrice - buyPrice) / buyPrice) * 100
+    
+    sellTime = time  // Store the sell signal timestamp
+    daysBetween = (sellTime - buyTime) / (1000 * 60 * 60 * 24)  // Convert milliseconds to actual days
+
+    // Set label background color and text based on gain or loss
+    labelColor = percentChange > 0 ? color.new(color.green, 0) : color.new(color.red, 0)
+    labelText = percentChange > 0 ? "Gain: " : "Loss: "
+
+    // Display a label with percentage gain/loss and number of actual days, ensure it's well above the candles
+    label.new(bar_index, high + 50,text="Days: " + str.tostring(daysBetween, "#.##") + "\n" + labelText + str.tostring(percentChange, "#.##") + "%", color=labelColor, textcolor=color.white, size=size.normal)
+
+else
+    plotSell := false
+
+// Plot the buy signal on the crossover point with smaller triangle size
+plotshape(series=plotBuy, location=location.belowbar, color=color.green, style=shape.triangleup, text="BUY", textcolor=color.white, title="Buy Signal", size=size.small)
+
+// Plot the sell signal on the crossover point with smaller triangle size
+plotshape(series=plotSell, location=location.abovebar, color=color.red, style=shape.triangledown, text="SELL", textcolor=color.white, title="Sell Signal", size=size.small)
