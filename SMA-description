@@ -1,0 +1,32 @@
+SMA
+This script implements a Simple Moving Average (SMA) crossover strategy using three SMAs: 200-day, 50-day, and 20-day, with buy and sell signals triggered based on specific conditions involving these moving averages. The indicator is overlaid on the price chart, providing visual cues for potential buy and sell opportunities based on moving average crossovers.
+
+Key Features:
+
+Moving Averages:
+The 200-day, 50-day, and 20-day SMAs are calculated and plotted on the price chart. These are key levels that traders use to assess trends.
+The 200-day SMA represents the long-term trend, the 50-day SMA is used for medium-term trends, and the 20-day SMA is for short-term analysis.
+
+Buy Signal:
+A buy signal is triggered when the price is below all three moving averages (200 SMA, 50 SMA, 20 SMA) and the SMAs are in a specific downward trend (200 SMA > 50 SMA > 20 SMA). This is an indication of a potential upward reversal.
+The buy signal is marked with a green triangle below the price bar.
+
+Sell Signal:
+A sell signal is triggered when the price is above all three moving averages and the SMAs are in a specific upward trend (200 SMA < 50 SMA < 20 SMA). This signals a potential downward reversal.
+The sell signal is marked with a red triangle above the price bar.
+Trade Information:
+
+After a buy signal, the buy price, bar index, and timestamp are recorded. When a sell signal occurs, the percentage gain or loss is calculated along with the number of days between the buy and sell signals.
+The script automatically displays a label on the chart showing the gain or loss percentage along with the number of days the trade lasted. Green labels represent gains, and red labels represent losses.
+
+User-friendly Visuals:
+The buy and sell signals are plotted as small triangles directly on the chart for easy identification.
+Detailed trade information is provided with well-formatted labels to highlight the profit or loss after each trade.
+
+How It Works:
+This strategy helps traders to identify trend reversals by leveraging long-term and short-term moving averages.
+A single buy or sell signal is triggered based on price movement relative to the SMAs and their order.
+The tool is designed to help traders quickly spot buying and selling opportunities with clear visual indicators and gain/loss metrics.
+This indicator is ideal for traders looking to implement a systematic SMA-based strategy with well-defined buy/sell points and automatic performance tracking for each trade.
+
+Disclaimer: The information provided here is for educational and informational purposes only. It is not intended as financial advice or as a recommendation to buy or sell any stocks. Please conduct your own research or consult a financial advisor before making any investment decisions. ProfitLens does not guarantee the accuracy, completeness, or reliability of any information presented.
