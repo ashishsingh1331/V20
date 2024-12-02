@@ -1,0 +1,38 @@
+67% Fall from All-Time High (ATH) TradingView Indicator
+Description:
+This indicator, titled "67% Fall from ATH", is designed to visualize the price levels at various percentage declines from the all-time high (ATH) of an asset. It helps traders and analysts identify significant retracement levels relative to the ATH for better decision-making in trading and investing.
+
+Key Features:
+All-Time High (ATH) Calculation:
+
+The indicator dynamically tracks the ATH value by comparing the current high price with the previously recorded ATH.
+Retracement Levels:
+
+Calculates and plots retracement levels for the following percentage falls from the ATH:
+20% Fall: Representing an 80% price level of the ATH.
+30% Fall: Representing a 70% price level of the ATH.
+40% Fall: Representing a 60% price level of the ATH.
+50% Fall: Representing a 50% price level of the ATH.
+67% Fall: Representing a 33% price level of the ATH.
+Visualization:
+
+Plots:
+Each retracement level is plotted on the price chart with distinct colors for easy identification:
+ATH: Black
+20% Fall: Green
+30% Fall: Blue
+40% Fall: Orange
+50% Fall: Purple
+67% Fall: Red
+Labels:
+Each level is annotated with a label indicating the percentage fall, providing a clear visual reference for traders.
+Overlay on Price Chart:
+
+The indicator is set to overlay=true, ensuring that the levels and labels are plotted directly on the price chart for seamless integration with other analyses.
+Use Case:
+This indicator is particularly useful for:
+
+Identifying potential support and resistance levels after significant price corrections.
+Assessing risk and reward scenarios by analyzing how far the price is from critical retracement levels.
+Planning entries and exits based on historical price behavior relative to these retracement zones.
+By providing clear visualizations of critical retracement levels from the ATH, this indicator serves as a powerful tool for technical analysis and strategic decision-making.
