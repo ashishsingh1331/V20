@@ -1,0 +1,36 @@
+//@version=5
+indicator("67% Fall from ATH", overlay=true)
+
+// Calculate the all-time high (ATH)
+var float ath = na
+if high > ath or na(ath)
+    ath := high
+
+// Calculate the 20%, 30%, 40%, 50% and 67% levels from ATH
+var float level20 = na
+var float level30 = na
+var float level40 = na
+var float level50 = na
+var float level67 = na
+if not na(ath)
+    level20 := ath * 0.80  // 20% fall from ATH
+    level30 := ath * 0.70  // 30% fall from ATH
+    level40 := ath * 0.60  // 40% fall from ATH
+    level50 := ath * 0.50  // 50% fall from ATH
+    level67 := ath * 0.33  // 67% fall from ATH
+
+// Plotting the levels with labels
+plot(ath, color=color.black, linewidth=2, title="All-Time High")
+plot(level20, color=color.green, linewidth=2, title="20% Fall from ATH")
+plot(level30, color=color.blue, linewidth=2, title="30% Fall from ATH")
+plot(level40, color=color.orange, linewidth=2, title="40% Fall from ATH")
+plot(level50, color=color.purple, linewidth=2, title="50% Fall from ATH")
+plot(level67, color=color.red, linewidth=2, title="67% Fall from ATH")
+
+// Adding labels
+label.new(x=bar_index, y=ath, text="ATH", color=color.black, style=label.style_label_down, textcolor=color.white)
+label.new(x=bar_index, y=level20, text="20% Fall", color=color.green, style=label.style_label_down, textcolor=color.white)
+label.new(x=bar_index, y=level30, text="30% Fall", color=color.blue, style=label.style_label_down, textcolor=color.white)
+label.new(x=bar_index, y=level40, text="40% Fall", color=color.orange, style=label.style_label_down, textcolor=color.white)
+label.new(x=bar_index, y=level50, text="50% Fall", color=color.purple, style=label.style_label_down, textcolor=color.white)
+label.new(x=bar_index, y=level67, text="67% Fall", color=color.red, style=label.style_label_down, textcolor=color.white)
