@@ -1,0 +1,25 @@
+//@version=5
+indicator("10% Drop from Current High", overlay=true)
+
+// Input parameters
+dropPercentage = input.float(10, "Drop Percentage", minval=0.1)  // Percentage drop from current high
+lookbackPeriod = input.int(20, "Lookback Period")  // Period to calculate the highest high
+
+// Track the highest price within the lookback period
+currentHigh = ta.highest(high, lookbackPeriod)
+
+// Calculate the 10% drop level from the current high
+dropLevel = currentHigh * (1 - dropPercentage / 100)
+
+// Check if the current price is below or equal to the drop level
+priceBelowDropLevel = close <= dropLevel
+
+// Plot the current high and drop level
+plot(currentHigh, color=color.blue, linewidth=2, title="Current High")
+plot(dropLevel, color=color.red, linewidth=2, title="10% Drop Level")
+
+// Highlight bars where the price has dropped 10% or more from the current high
+bgcolor(priceBelowDropLevel ? color.new(color.red, 90) : na, title="Price Below Drop Level")
+
+// Plot a shape when the price touches or drops below the drop level
+plotshape(series=priceBelowDropLevel, location=location.belowbar, color=color.red, style=shape.labeldown, size=size.small)
