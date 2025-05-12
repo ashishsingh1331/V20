@@ -1,0 +1,70 @@
+//@version=5
+indicator("SMA Buy/Sell with Averaging", overlay=true)
+
+// Input settings
+showOnlyAveraging = input.bool(false, "Show Only Averaging Trades", tooltip="When enabled, only shows averaging signals and recovery, hiding main buy/sell signals and summaries")
+showOnlyProfitable = input.bool(false, "Show Only Profitable Trades", tooltip="When enabled, only shows trade summaries with gains, hiding those with losses")
+
+// Moving averages
+sma200 = ta.sma(close, 200)
+sma50 = ta.sma(close, 50)
+sma20 = ta.sma(close, 20)
+
+plot(sma200, color=color.black, title="SMA 200")
+plot(sma50, color=color.red, title="SMA 50")
+plot(sma20, color=color.green, title="SMA 20")
+
+// Buy and sell signal logic
+buySignal = close < sma200 and close < sma50 and close < sma20 and sma200 > sma50 and sma50 > sma20
+sellSignal = close > sma200 and close > sma50 and close > sma20 and sma200 < sma50 and sma50 < sma20
+
+// State variables
+var float buyPrice = na
+var int buyTime = na
+var bool hasBought = false
+var bool hasSold = false
+var bool avgMarked = false
+var float avgPrice = na
+var int avgTime = na
+var float sellPrice = na
+var bool tradeHasAveraging = false
+
+// Buy logic
+if buySignal and not hasBought
+    buyPrice := close
+    buyTime := time
+    hasBought := true
+    hasSold := false
+    avgMarked := false
+    tradeHasAveraging := false
+    if not showOnlyAveraging
+        label.new(bar_index, low, "BUY", style=label.style_label_up, color=color.green, textcolor=color.white)
+
+// Sell logic
+if sellSignal and hasBought and not hasSold
+    hasSold := true
+    hasBought := false
+    sellPrice := close
+    percentChange = ((sellPrice - buyPrice) / buyPrice) * 100
+    sellTime = time
+    daysBetween = (sellTime - buyTime) / (1000 * 60 * 60 * 24)
+    labelText = (percentChange > 0 ? "Gain: " : "Loss: ") + str.tostring(percentChange, "#.##") + "%"
+    if not showOnlyAveraging and (not showOnlyProfitable or (showOnlyProfitable and percentChange > 0))
+        label.new(bar_index, high, "Main Trade\nDays: " + str.tostring(daysBetween, "#.##") + "\n" + labelText, style=label.style_label_down, color=percentChange > 0 ? color.green : color.red, textcolor=color.white)
+
+// Averaging signal: mark when price drops 10% from buy
+if hasBought and not avgMarked and close <= buyPrice * 0.9
+    avgPrice := close
+    avgTime := time
+    avgMarked := true
+    tradeHasAveraging := true
+    if not showOnlyAveraging or (showOnlyAveraging and tradeHasAveraging)
+        label.new(bar_index, low, "Average", style=label.style_label_up, color=#ff0095, textcolor=color.white)
+
+// Averaging recovery: mark when price returns to buy price
+if avgMarked and close >= buyPrice
+    gainFromDip = ((close - avgPrice) / avgPrice) * 100
+    daysToRecover = (time - avgTime) / (1000 * 60 * 60 * 24)
+    if (not showOnlyAveraging or (showOnlyAveraging and tradeHasAveraging)) and (not showOnlyProfitable or (showOnlyProfitable and gainFromDip > 0))
+        label.new(bar_index, high, "Gain in averaging\nDays: " + str.tostring(daysToRecover, "#.##") + "\nGain: " + str.tostring(gainFromDip, "#.##") + "%", style=label.style_label_down, color=#ff0095, textcolor=color.white)
+    avgMarked := false
